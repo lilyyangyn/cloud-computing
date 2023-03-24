@@ -12,8 +12,6 @@ AGENT_INTERNAL_IP=$(kubectl get nodes -o wide | grep "client-agent-*" | awk '{pr
 MEASURE_INTERNAL_NAME=$(kubectl get nodes -o wide | grep "client-measure-*" | awk '{print $1}')
 MEASURE_INTERNAL_IP=$(kubectl get nodes -o wide | grep "client-measure-*" | awk '{print $6}')
 
-echo $AGENT_INTERNAL_IP
-
 # no-interference
 
 MEMCACHED_IP=$(kubectl get pod some-memcached --template '{{.status.podIP}}')
