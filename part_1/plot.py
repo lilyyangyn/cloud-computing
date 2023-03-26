@@ -104,7 +104,7 @@ def plot(ipath, opath, save):
 	plt.legend(loc='center right', bbox_to_anchor=(1.5, 0.5))
 
 	plt.title("95th Latency with different loads and interferences\nError bar: 1ms. (5 repetitions per points)")
-	# plt.gca().set_aspect(15)
+	# plt.gca().set_aspect("equal")
 
 	if not save:
 		plt.show()
