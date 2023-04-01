@@ -80,32 +80,34 @@ def plot(ipath, opath, save):
 
 	# ----------------------------------- Plotting -----------------------------------
 
-	plt.errorbar(x_data_nil, y_data_nil, xerr=x_err_nil, yerr=y_err_nil, fmt='-o', markersize=10, markerfacecolor='None', capsize=3, label="no interference")
-	plt.errorbar(x_data_cpu, y_data_cpu, xerr=x_err_cpu, yerr=y_err_cpu, fmt='-s', markersize=10, markerfacecolor='None', capsize=3, label="interference on cpu")
-	plt.errorbar(x_data_l1d, y_data_l1d, xerr=x_err_l1d, yerr=y_err_l1d, fmt='-x', markersize=10, markerfacecolor='None', capsize=3, label="interference on l1d")
-	plt.errorbar(x_data_l1i, y_data_l1i, xerr=x_err_l1i, yerr=y_err_l1i, fmt='-<', markersize=10, markerfacecolor='None', capsize=3, label="interference on l1i")
-	plt.errorbar(x_data_l2, y_data_l2, xerr=x_err_l2, yerr=y_err_l2, fmt='-v', markersize=10, markerfacecolor='None', capsize=3, label="interference on l2")
-	plt.errorbar(x_data_llc, y_data_llc, xerr=x_err_llc, yerr=y_err_llc, fmt='-^', markersize=10, markerfacecolor='None', capsize=3, label="interference on llc")
-	plt.errorbar(x_data_membw, y_data_membw, xerr=x_err_membw, yerr=y_err_membw, fmt='>', markersize=10, markerfacecolor='None', capsize=3, label="interference on membw")
+	fig = plt.figure(1, figsize=(6, 8))
+	# fig = plt.figure()
+	ax = fig.add_subplot(111)
 
-	# plt.xlim([0, 115])		
-	# plt.ylim([0, 8])		
-	plt.xticks(np.arange(0, 111, 10))	# 0 - 110K
-	plt.yticks(np.arange(0, 8.5, 0.5))	# 0 - 8ms
+	ax.errorbar(x_data_nil, y_data_nil, xerr=x_err_nil, yerr=y_err_nil, fmt='-o', markersize=10, markerfacecolor='None', capsize=3, label="no interference")
+	ax.errorbar(x_data_cpu, y_data_cpu, xerr=x_err_cpu, yerr=y_err_cpu, fmt='-s', markersize=10, markerfacecolor='None', capsize=3, label="interference on cpu")
+	ax.errorbar(x_data_l1d, y_data_l1d, xerr=x_err_l1d, yerr=y_err_l1d, fmt='-x', markersize=10, markerfacecolor='None', capsize=3, label="interference on l1d")
+	ax.errorbar(x_data_l1i, y_data_l1i, xerr=x_err_l1i, yerr=y_err_l1i, fmt='-<', markersize=10, markerfacecolor='None', capsize=3, label="interference on l1i")
+	ax.errorbar(x_data_l2, y_data_l2, xerr=x_err_l2, yerr=y_err_l2, fmt='-v', markersize=10, markerfacecolor='None', capsize=3, label="interference on l2")
+	ax.errorbar(x_data_llc, y_data_llc, xerr=x_err_llc, yerr=y_err_llc, fmt='-^', markersize=10, markerfacecolor='None', capsize=3, label="interference on llc")
+	ax.errorbar(x_data_membw, y_data_membw, xerr=x_err_membw, yerr=y_err_membw, fmt='>', markersize=10, markerfacecolor='None', capsize=3, label="interference on membw")
 
+	plt.xlim([0, 110])		
+	plt.ylim([0, 8])		
+	ax.set_xticks(np.arange(0, 111, 10))	# 0 - 110K
+	ax.set_yticks(np.arange(0, 8.1, 0.2))	# 0 - 8ms
 
-	plt.gca().xaxis.set_major_formatter(FormatStrFormatter('%dK'))
+	ax.xaxis.set_major_formatter(FormatStrFormatter('%dK'))
 
-	plt.xlabel('Queries per second (QPS)')
-	plt.ylabel('95th Latency (ms)')
+	ax.set_xlabel('Queries per second (QPS)')
+	ax.set_ylabel('95th Latency (ms)')
 
-	plt.grid(linestyle= '--')
+	ax.grid(linestyle= '--')
 
-	plt.legend(loc='center right', bbox_to_anchor=(1.5, 0.5))
+	ax.legend(loc='center right', bbox_to_anchor=(1.5, 0.5))
 
-	plt.title("95th Latency with different loads and interferences\nError bar: 1ms. (5 repetitions per points)")
-	# plt.gca().set_aspect("equal")
-
+	ax.set_title("95th Latency with different loads and interferences\nError bar: 1ms. (5 repetitions per points)")
+	
 	if not save:
 		plt.show()
 	else:

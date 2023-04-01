@@ -101,7 +101,7 @@ def plot(ipath, opath, save):
 
 	plt.grid(linestyle= '--')
 
-	plt.legend(loc='center right', bbox_to_anchor=(1.35, 0.5))
+	plt.legend(loc='center right', bbox_to_anchor=(1.36, 0.5))
 
 	plt.title("Speedup of different jobs v.s. Number of threads\nError bar: 2s. (3 repetitions per points)")
 	# plt.gca().set_aspect("equal")
