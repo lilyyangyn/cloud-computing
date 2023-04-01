@@ -1,0 +1,17 @@
+
+------ Threads NUM 1 ------
+parsec-canneal 1/1 4m1s 4m1s
+parsec-canneal 1/1 4m2s 4m32s
+parsec-canneal 1/1 4m9s 4m34s
+------ Threads NUM 2 ------
+parsec-canneal 1/1 2m29s 2m31s
+parsec-canneal 1/1 2m30s 2m31s
+parsec-canneal 1/1 2m28s 2m31s
+------ Threads NUM 4 ------
+parsec-canneal 1/1 108s 2m1s
+parsec-canneal 1/1 106s 2m1s
+parsec-canneal 1/1 107s 2m1s
+------ Threads NUM 8 ------
+parsec-canneal 1/1 86s 90s
+parsec-canneal 1/1 84s 90s
+parsec-canneal 1/1 86s 90s

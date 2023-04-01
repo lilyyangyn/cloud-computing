@@ -1,0 +1,17 @@
+
+------ Threads NUM 1 ------
+parsec-ferret 1/1 5m26s 5m33s
+parsec-ferret 1/1 5m20s 5m35s
+parsec-ferret 1/1 5m21s 5m46s
+------ Threads NUM 2 ------
+parsec-ferret 1/1 2m46s 3m2s
+parsec-ferret 1/1 2m45s 3m1s
+parsec-ferret 1/1 2m47s 3m1s
+------ Threads NUM 4 ------
+parsec-ferret 1/1 96s 2m
+parsec-ferret 1/1 97s 2m
+parsec-ferret 1/1 96s 2m
+------ Threads NUM 8 ------
+parsec-ferret 1/1 84s 91s
+parsec-ferret 1/1 84s 90s
+parsec-ferret 1/1 83s 90s

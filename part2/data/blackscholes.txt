@@ -1,0 +1,17 @@
+
+------ Threads NUM 1 ------
+parsec-blackscholes 1/1 2m8s 2m31s
+parsec-blackscholes 1/1 2m10s 2m31s
+parsec-blackscholes 1/1 2m7s 2m31s
+------ Threads NUM 2 ------
+parsec-blackscholes 1/1 78s 90s
+parsec-blackscholes 1/1 78s 90s
+parsec-blackscholes 1/1 78s 90s
+------ Threads NUM 4 ------
+parsec-blackscholes 1/1 52s 61s
+parsec-blackscholes 1/1 53s 61s
+parsec-blackscholes 1/1 52s 60s
+------ Threads NUM 8 ------
+parsec-blackscholes 1/1 42s 60s
+parsec-blackscholes 1/1 42s 60s
+parsec-blackscholes 1/1 42s 60s

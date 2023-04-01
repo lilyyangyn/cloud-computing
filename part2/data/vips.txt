@@ -1,0 +1,17 @@
+
+------ Threads NUM 1 ------
+parsec-vips 1/1 111s 2m
+parsec-vips 1/1 105s 2m
+parsec-vips 1/1 104s 2m1s
+------ Threads NUM 2 ------
+parsec-vips 1/1 59s 60s
+parsec-vips 1/1 55s 60s
+parsec-vips 1/1 60s 91s
+------ Threads NUM 4 ------
+parsec-vips 1/1 43s 60s
+parsec-vips 1/1 43s 60s
+parsec-vips 1/1 43s 60s
+------ Threads NUM 8 ------
+parsec-vips 1/1 43s 61s
+parsec-vips 1/1 43s 61s
+parsec-vips 1/1 42s 60s

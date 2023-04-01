@@ -1,0 +1,17 @@
+
+------ Threads NUM 1 ------
+parsec-dedup 1/1 36s 60s
+parsec-dedup 1/1 36s 61s
+parsec-dedup 1/1 35s 60s
+------ Threads NUM 2 ------
+parsec-dedup 1/1 28s 30s
+parsec-dedup 1/1 29s 31s
+parsec-dedup 1/1 28s 30s
+------ Threads NUM 4 ------
+parsec-dedup 1/1 26s 30s
+parsec-dedup 1/1 26s 30s
+parsec-dedup 1/1 27s 31s
+------ Threads NUM 8 ------
+parsec-dedup 1/1 26s 30s
+parsec-dedup 1/1 26s 30s
+parsec-dedup 1/1 26s 30s

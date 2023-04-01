@@ -1,0 +1,17 @@
+
+------ Threads NUM 1 ------
+parsec-radix 1/1 59s 2m54s
+parsec-radix 1/1 58s 2m9s
+parsec-radix 1/1 57s 2m
+------ Threads NUM 2 ------
+parsec-radix 1/1 32s 49s
+parsec-radix 1/1 32s 33s
+parsec-radix 1/1 32s 64s
+------ Threads NUM 4 ------
+parsec-radix 1/1 19s 24s
+parsec-radix 1/1 18s 21s
+parsec-radix 1/1 19s 22s
+------ Threads NUM 8 ------
+parsec-radix 1/1 14s 35s
+parsec-radix 1/1 14s 32s
+parsec-radix 1/1 14s 17s

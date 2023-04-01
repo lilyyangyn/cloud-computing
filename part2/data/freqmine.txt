@@ -1,0 +1,17 @@
+
+------ Threads NUM 1 ------
+parsec-freqmine 1/1 8m11s 8m33s
+parsec-freqmine 1/1 8m6s 8m33s
+parsec-freqmine 1/1 8m14s 8m37s
+------ Threads NUM 2 ------
+parsec-freqmine 1/1 4m8s 4m37s
+parsec-freqmine 1/1 4m9s 4m33s
+parsec-freqmine 1/1 4m8s 4m32s
+------ Threads NUM 4 ------
+parsec-freqmine 1/1 2m9s 2m31s
+parsec-freqmine 1/1 2m9s 2m31s
+parsec-freqmine 1/1 2m9s 2m31s
+------ Threads NUM 8 ------
+parsec-freqmine 1/1 105s 2m1s
+parsec-freqmine 1/1 106s 2m1s
+parsec-freqmine 1/1 105s 2m1s
