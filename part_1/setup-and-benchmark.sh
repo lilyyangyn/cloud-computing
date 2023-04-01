@@ -63,5 +63,10 @@ sh benchmark.sh
 
 python3.7 plot.py
 
+# ---------------------------- Delete Cluster ----------------------------
+
+kops delete cluster part2a.k8s.local --yes
+
+
 
 

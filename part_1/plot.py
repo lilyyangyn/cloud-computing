@@ -76,7 +76,7 @@ def plot(ipath, opath, save):
 	y_data_membw = raw_data_membw.mean(axis=0)
 	y_err_membw = np.std(raw_data_membw, ddof=1) / np.sqrt(len(raw_data_membw))
 
-	x_data = [ x for x in range(30, 111, 5) ]
+	# x_data = [ x for x in range(30, 111, 5) ]
 
 	# ----------------------------------- Plotting -----------------------------------
 
