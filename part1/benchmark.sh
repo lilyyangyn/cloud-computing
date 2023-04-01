@@ -51,7 +51,7 @@ for case in "cpu" "l1d" "l1i" "l2" "llc" "membw";
 do
 	sleep 30
 
-	kubectl create -f ../interference/ibench-${case}.yaml
+	kubectl create -f interference/ibench-${case}.yaml
 	sleep 60
 
 	gcloud compute ssh --zone "${ZONE}" "${MEASURE_INTERNAL_NAME}"  --project "${PROJECT}" \
