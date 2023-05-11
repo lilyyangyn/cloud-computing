@@ -79,13 +79,20 @@ def plot(ipath, opath, save):
 
 	# ----------------------------------- Plotting -----------------------------------
 
-	plt.errorbar(x_data, y_data_blackscholes, yerr=y_err_blackscholes, fmt='-o', markerfacecolor='None', capsize=3, label="blackscholes")
-	plt.errorbar(x_data, y_data_canneal, yerr=y_err_canneal, fmt='-s', markerfacecolor='None', capsize=3, label="canneal")
-	plt.errorbar(x_data, y_data_dedup, yerr=y_err_dedup, fmt='-x', markerfacecolor='None', capsize=3, label="dedup")
-	plt.errorbar(x_data, y_data_ferret, yerr=y_err_ferret, fmt='-<', markerfacecolor='None', capsize=3, label="ferret")
-	plt.errorbar(x_data, y_data_freqmine, yerr=y_err_freqmine, fmt='-v', markerfacecolor='None', capsize=3, label="freqmine")
-	plt.errorbar(x_data, y_data_radix, yerr=y_err_radix, fmt='-^', markerfacecolor='None', capsize=3, label="radix")
-	plt.errorbar(x_data, y_data_vips, yerr=y_err_vips, fmt='->', markerfacecolor='None', capsize=3, label="vips")
+	# plt.errorbar(x_data, y_data_blackscholes, yerr=y_err_blackscholes, fmt='-o', markerfacecolor='None', capsize=3, label="blackscholes")
+	# plt.errorbar(x_data, y_data_canneal, yerr=y_err_canneal, fmt='-s', markerfacecolor='None', capsize=3, label="canneal")
+	# plt.errorbar(x_data, y_data_dedup, yerr=y_err_dedup, fmt='-x', markerfacecolor='None', capsize=3, label="dedup")
+	# plt.errorbar(x_data, y_data_ferret, yerr=y_err_ferret, fmt='-<', markerfacecolor='None', capsize=3, label="ferret")
+	# plt.errorbar(x_data, y_data_freqmine, yerr=y_err_freqmine, fmt='-v', markerfacecolor='None', capsize=3, label="freqmine")
+	# plt.errorbar(x_data, y_data_radix, yerr=y_err_radix, fmt='-^', markerfacecolor='None', capsize=3, label="radix")
+	# plt.errorbar(x_data, y_data_vips, yerr=y_err_vips, fmt='->', markerfacecolor='None', capsize=3, label="vips")
+	plt.plot(x_data, y_data_blackscholes, marker='o', label="blackscholes")
+	plt.plot(x_data, y_data_canneal, marker='s',label="canneal")
+	plt.plot(x_data, y_data_dedup, marker='x',label="dedup")
+	plt.plot(x_data, y_data_ferret, marker='<',label="ferret")
+	plt.plot(x_data, y_data_freqmine, marker='v',label="freqmine")
+	plt.plot(x_data, y_data_radix, marker='>',label="radix")
+	plt.plot(x_data, y_data_vips, marker='^',label="vips")
 	
 	x = np.linspace(0,5,100)
 	y = x
@@ -103,7 +110,8 @@ def plot(ipath, opath, save):
 
 	plt.legend(loc='center right', bbox_to_anchor=(1.36, 0.5))
 
-	plt.title("Speedup of different jobs v.s. Number of threads\nError bar: 2s. (3 repetitions per points)")
+	# plt.title("Speedup of different jobs v.s. Number of threads\nError bar: 2s. (3 repetitions per points)")
+	plt.title("Speedup of different jobs v.s. Number of threads\n(3 repetitions per points)")
 	# plt.gca().set_aspect("equal")
 
 	if not save:
