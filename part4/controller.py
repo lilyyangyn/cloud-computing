@@ -1,13 +1,13 @@
 import argparse
-import functools
-import subprocess
+#import functools
+#import subprocess
 from time import sleep
 import time
 
-import psutil
+#import psutil
 from scheduler import docker_scheduler
-import signal
-import sys
+#import signal
+#import sys
 
 dedup = ("0,1,2,3",
          "dedup",
@@ -48,7 +48,8 @@ def main():
 
     start = time.perf_counter()
 
-    sched.start_job(sched.all_jobs[0], "nm")
+    sched.start_job(sched.all_jobs[0], config[0][1])
+    x = 0
     while True:
         res = sched.check_isempty()
         if res == True:
@@ -56,9 +57,10 @@ def main():
 
         sleep(0.25)
 
-        status = sched.end_job(sched.all_jobs[0], "nm")
+        status = sched.end_job(sched.all_jobs[0], config[x][1])
         if status == True:
-            sched.start_job(sched.all_jobs[0])
+            x+=1
+            sched.start_job(sched.all_jobs[0], config[x][1])
         
     end = time.perf_counter()
     
