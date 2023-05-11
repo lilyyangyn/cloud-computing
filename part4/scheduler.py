@@ -54,7 +54,7 @@ class docker_scheduler:
         container.reload()
         if container.status == "exited":
             container.remove()
-            self.pop_from_queue(name)
+            #self.pop_from_queue(name)
             self.all_jobs.pop(0)
             print("job ended")
             return True

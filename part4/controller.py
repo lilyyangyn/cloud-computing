@@ -10,34 +10,34 @@ from scheduler import docker_scheduler
 #import sys
 
 dedup = ("0,1,2,3",
-         "dedup",
+         "dedup_",
          "anakli/cca:parsec_dedup",
-         "./bin/parsecmgmt -a run -p dedup -i native -n 3")
+         "./bin/parsecmgmt -a run -p dedup_ -i native -n 3")
 fft = ("0,1,2,3",
-       "radix",
+       "radix_",
        "anakli/cca:splash2x_radix",
-       "./bin/parsecmgmt -a run -p radix -i native -n 3")
+       "./bin/parsecmgmt -a run -p radix_ -i native -n 3")
 blackscholes = ("0,1,2,3",
-                "blackscholes",
+                "blackscholes_",
                 "anakli/cca:parsec_blackscholes",
-                "./bin/parsecmgmt -a run -p blackscholes -i native -n 3")
+                "./bin/parsecmgmt -a run -p blackscholes_ -i native -n 3")
 canneal = ("0,1,2,3",
-           "canneal",
+           "canneal_",
            "anakli/cca:parsec_canneal",
-           "./bin/parsecmgmt -a run -p canneal -i native -n 3")
+           "./bin/parsecmgmt -a run -p canneal_ -i native -n 3")
 freqmine = ("0,1,2,3",
-            "freqmine",
+            "freqmine_",
             "anakli/cca:parsec_freqmine",
-            "./bin/parsecmgmt -a run -p freqmine -i native -n 3")
+            "./bin/parsecmgmt -a run -p freqmine_ -i native -n 3")
 ferret = ("0,1,2,3",
-          "ferret",
+          "ferret_",
           "anakli/cca:parsec_ferret",
-          "./bin/parsecmgmt -a run -p ferret -i native -n 3")
+          "./bin/parsecmgmt -a run -p ferret_ -i native -n 3")
 
 vips = ("0,1,2,3",
-          "vips",
+          "vips_",
           "anakli/cca:parsec_vips",
-          "./bin/parsecmgmt -a run -p vips -i native -n 3")
+          "./bin/parsecmgmt -a run -p vips_ -i native -n 3")
 
 def main():
     q0 = 0
@@ -46,7 +46,7 @@ def main():
     config = [dedup, fft, blackscholes, canneal, freqmine, ferret, vips]
     sched = docker_scheduler(q0,q1,q2, config=config)
 
-    start = time.perf_counter()
+    start = time.time()
 
     sched.start_job(sched.all_jobs[0], config[0][1])
     x = 0
@@ -60,12 +60,14 @@ def main():
         status = sched.end_job(sched.all_jobs[0], config[x][1])
         if status == True:
             x+=1
+            if sched.check_isempty():
+                break
             sched.start_job(sched.all_jobs[0], config[x][1])
         
-    end = time.perf_counter()
+    end = time.time()
     
 
-    print("all jobs done in ", end - start)
+    print("all jobs done in ", end - start, "s")
 
         
 
