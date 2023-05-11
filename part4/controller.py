@@ -2,43 +2,51 @@ import argparse
 import functools
 import subprocess
 from time import sleep
+import time
 
 import psutil
 from scheduler import docker_scheduler
 import signal
 import sys
 
-dedup = (
+dedup = ("0,1,2,3",
          "dedup",
-         "anakli/parsec:dedup-native-reduced",
-         "./bin/parsecmgmt -a run -p dedup -i native -n 1")
-fft = (
-       "splash2x-fft",
-       "anakli/parsec:splash2x-fft-native-reduced",
-       "./bin/parsecmgmt -a run -p splash2x.fft -i native -n 1")
-blackscholes = (
+         "anakli/cca:parsec_dedup",
+         "./bin/parsecmgmt -a run -p dedup -i native -n 3")
+fft = ("0,1,2,3",
+       "radix",
+       "anakli/cca:splash2x_radix",
+       "./bin/parsecmgmt -a run -p radix -i native -n 3")
+blackscholes = ("0,1,2,3",
                 "blackscholes",
-                "anakli/parsec:blackscholes-native-reduced",
-                "./bin/parsecmgmt -a run -p blackscholes -i native -n 2")
-canneal = (
+                "anakli/cca:parsec_blackscholes",
+                "./bin/parsecmgmt -a run -p blackscholes -i native -n 3")
+canneal = ("0,1,2,3",
            "canneal",
-           "anakli/parsec:canneal-native-reduced",
-           "./bin/parsecmgmt -a run -p canneal -i native -n 2")
-freqmine = (
+           "anakli/cca:parsec_canneal",
+           "./bin/parsecmgmt -a run -p canneal -i native -n 3")
+freqmine = ("0,1,2,3",
             "freqmine",
-            "anakli/parsec:freqmine-native-reduced",
-            "./bin/parsecmgmt -a run -p freqmine -i native -n 2")
-ferret = (
+            "anakli/cca:parsec_freqmine",
+            "./bin/parsecmgmt -a run -p freqmine -i native -n 3")
+ferret = ("0,1,2,3",
           "ferret",
-          "anakli/parsec:ferret-native-reduced",
+          "anakli/cca:parsec_ferret",
           "./bin/parsecmgmt -a run -p ferret -i native -n 3")
+
+vips = ("0,1,2,3",
+          "vips",
+          "anakli/cca:parsec_vips",
+          "./bin/parsecmgmt -a run -p vips -i native -n 3")
 
 def main():
     q0 = 0
     q1 = 1
     q2 = 2
-    config = 0
+    config = [dedup, fft, blackscholes, canneal, freqmine, ferret, vips]
     sched = docker_scheduler(q0,q1,q2, config=config)
+
+    start = time.perf_counter()
 
     sched.start_job(sched.all_jobs[0], "nm")
     while True:
@@ -52,9 +60,10 @@ def main():
         if status == True:
             sched.start_job(sched.all_jobs[0])
         
-
+    end = time.perf_counter()
     
-    print("all jobs done")
+
+    print("all jobs done in ", end - start)
 
         
 

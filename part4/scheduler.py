@@ -12,7 +12,12 @@ class docker_scheduler:
         self.load_level = 0
         ct = 0
         for c in config:
-            cont = self.client.create_container()
+            cont = self.client.containers.create(cpuset_cpus=c[0],
+                                               name=c[1],
+                                               detach=True,
+                                               auto_remove=False,
+                                               image=c[2],
+                                               command=c[3])
             self.all_jobs.append(cont)
             self.push_to_queue(ct)
             ct += 1
@@ -52,9 +57,9 @@ class docker_scheduler:
             self.pop_from_queue(name)
             self.all_jobs.pop(0)
             print("job ended")
-            return False
+            return True
         print("job not ended yet")
-        return True
+        return False
     
     def start_running(self):
         
