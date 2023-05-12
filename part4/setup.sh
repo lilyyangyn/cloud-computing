@@ -23,13 +23,6 @@ AGENT_INTERNAL_NAME=$(kubectl get nodes -o wide | grep "client-agent-*" | awk '{
 MEASURE_INTERNAL_NAME=$(kubectl get nodes -o wide | grep "client-measure-*" | awk '{print $1}')
 # MEASURE_INTERNAL_IP=$(kubectl get nodes -o wide | grep "client-measure-*" | awk '{print $6}')
 
-# gcloud compute ssh --zone "europe-west3-a" "${AGENT_INTERNAL_NAME}"  --project "cca-eth-2023-group-49" \
-# 	-- "sudo apt-get update
-# 		sudo apt install -y memcached libmemcached-tools
-# 		sudo systemctl status memcached
-# 		// todo 
-# 		sudo systemctl restart memcached" 
-
 gcloud compute ssh --zone "europe-west3-a" "${AGENT_INTERNAL_NAME}"  --project "cca-eth-2023-group-49" \
 	-- "sudo apt-get update
 		sudo apt-get install libevent-dev libzmq3-dev git make g++ --yes
@@ -47,6 +40,18 @@ gcloud compute ssh --zone "europe-west3-a" "${MEASURE_INTERNAL_NAME}"  --project
 		make" 
 
 gcloud compute scp --scp-flag=-r cpu_util_measure.py ubuntu@${MEMCACHED_SERVER_NAME}:/home/ubuntu/ --zone europe-west3-a
+gcloud compute scp --scp-flag=-r memcached_config.py ubuntu@${MEMCACHED_SERVER_NAME}:/home/ubuntu/ --zone europe-west3-a
+
+
+gcloud compute ssh --zone "europe-west3-a" "${AGENT_INTERNAL_NAME}"  --project "cca-eth-2023-group-49" \
+	-- "cd /home/ubuntu
+		sudo apt-get update
+		sudo apt install -y memcached libmemcached-tools
+		# sudo systemctl status memcached
+		sudo cat memcached_config.py > /etc/memcached.conf
+		sudo systemctl restart memcached
+		sudo apt install python3-pip
+		pip3 install psutil" 
 
 # ---------------------------- Start Test On Client Agent ----------------------------
 

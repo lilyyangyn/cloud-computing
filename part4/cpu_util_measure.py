@@ -1,4 +1,5 @@
 import psutil
+import time
 
 print("Start measurement of CPU utilization")
 # with open("output.txt", "w") as f:
@@ -7,7 +8,8 @@ print("Start measurement of CPU utilization")
 # 		print("round", i, ":", util)
 # 	    f.write(util, "\n")
 
-for i in range(50):
-	print(psutil.cpu_percent(interval=5, percpu=True))
+for i in range(1000):
+	print(time.time(), psutil.cpu_percent(interval=1, percpu=True))
+	# time.sleep(1)
 
 
