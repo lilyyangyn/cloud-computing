@@ -2,36 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 import numpy as np
 import argparse
-
-def read_file(p, filename):
-	raw_data = []
-	real_qps = []
-
-	trial_result = []
-	trial_qps = []
-	header = False
-	with open(p + "/" + filename, 'r') as f:
-		for line in f:
-			if header:
-				header = False
-				continue
-			if "End" in line:
-				raw_data.append(trial_result)
-				trial_result = []
-				real_qps.append(trial_qps)
-				trial_qps = []
-				continue
-			if "Start" in line:
-				header = True
-				continue
-			data = line.split()
-			if len(data) < 18:
-				continue
-
-			trial_result.append(float(data[12]))	# p95
-			trial_qps.append(float(data[16]))		# real qps
-
-	return raw_data, real_qps
+from util import *
 
 def plot(ipath, opath, save):
 	raw_data_1_1, raw_qps_1_1 = np.array(read_file(ipath, "1_1.txt")) / 1000
@@ -94,9 +65,9 @@ def plot(ipath, opath, save):
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-i", "--input", help="Input data path", default="data/part4_1")
+	parser.add_argument("-i", "--input", help="Input data path", default="../data/part4_1")
 	parser.add_argument("-s", "--save", help="Save plot", action="store_true")
-	parser.add_argument("-o", "--output", help="Output data path", default=".")
+	parser.add_argument("-o", "--output", help="Output data path", default="../data")
 	args = parser.parse_args()
 
 	plot(args.input, args.output, args.save)

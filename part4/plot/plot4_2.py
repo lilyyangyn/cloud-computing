@@ -2,80 +2,8 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 import numpy as np
 import argparse
+from util import *
 
-def read_file_latency(p, filename):
-	raw_data = []
-	real_qps = []
-	start_times = []
-
-	trial_result = []
-	trial_qps = []
-	start_time = []
-	header = False
-	with open(p + "/" + filename, 'r') as f:
-		for line in f:
-			if header:
-				header = False
-				continue
-			if "End" in line:
-				raw_data.append(trial_result)
-				trial_result = []
-				real_qps.append(trial_qps)
-				trial_qps = []
-				start_times.append(start_time)
-				start_time = []
-				continue
-			if "Start" in line:
-				header = True
-				continue
-			data = line.split()
-			if len(data) < 18:
-				continue
-
-			trial_result.append(float(data[12]))	# p95
-			trial_qps.append(float(data[16]))		# real qps
-			start_time.append(data[-2][:-3])	# start time
-
-	return raw_data, real_qps, start_times
-
-def read_file_cpu(p, filename, start_times, cores):
-	utilizations = []
-
-	tests = []
-	for i in range(cores):
-		tests.append([])
-	counter = 0
-	round_id = 0
-	with open(p + "/" + filename, 'r') as f:
-		for line in f:
-			if "End" in line:
-				utilizations.append(tests)
-				tests = []
-				for i in range(cores):
-					tests.append([])
-				round_id += 1
-				continue
-			if "Start" in line:
-				continue
-
-			data = line.split("[")
-			if counter == 0:
-				start_time = data[0].split(".")[0]
-				if start_time in start_times[round_id]:
-					counter = 5
-				else:
-					continue
-
-			values = data[-1].strip("]").split(",")
-			
-			if len(values) < cores:
-				continue
-
-			for i in range(cores):
-				tests[i].append(float(values[i]))
-			counter -= 1
-
-	return utilizations
 
 def plot(ipath, opath, save):
 	raw_data_2_1, raw_qps_2_1, start_times_2_1 = read_file_latency(ipath, "2_1_latency.txt")
@@ -105,12 +33,15 @@ def plot(ipath, opath, save):
 	ax1.plot(x_data_2_1, y_data_2_1, marker='o', label="95th perc. latency")
 	ax1.set_ylabel('95th Percentile Latency (ms)')
 	ax1.set_yticks(np.arange(0, 2.1, 0.2)) # 0 - 4ms
+	# ax1.yaxis.label.set_color('blue')
+	ax1.tick_params(axis='y', labelcolor='tab:blue', labelsize=12)
 
 	ax1_1 = ax1.twinx()
 	ax1_1.plot(x_data_2_1, cpu_2_1, marker='^', label="CPU Utilization", color="orange")
 	ax1_1.set_ylabel('Average CPU Utilization (%)')
 	ax1_1.set_ylim([0, 101])
 	ax1_1.set_yticks(np.arange(0, 120, 20)) # 0 - 100
+	ax1_1.tick_params(axis='y', labelcolor='tab:orange', labelsize=12)
 
 	lines1, labels1 = ax1.get_legend_handles_labels()
 	lines1_2, labels1_2 = ax1_1.get_legend_handles_labels()
@@ -122,12 +53,14 @@ def plot(ipath, opath, save):
 	ax2.plot(x_data_2_2, y_data_2_2, marker='o', label="95th perc. latency")
 	ax2.set_ylabel('95th Percentile Latency (ms)')
 	ax2.set_yticks(np.arange(0, 2.1, 0.2)) # 0 - 4ms
+	ax2.tick_params(axis='y', labelcolor='tab:blue', labelsize=12)
 
 	ax2_1 = ax2.twinx()
 	ax2_1.plot(x_data_2_2, cpu_2_2, marker='^', label="CPU Utilization", color="orange")
 	ax2_1.set_ylabel('Average CPU Utilization (%)')
 	ax2_1.set_ylim([0, 201],)
 	ax2_1.set_yticks(np.arange(0, 220, 20)) # 0 - 100
+	ax2_1.tick_params(axis='y', labelcolor='tab:orange', labelsize=12)
 
 	lines2, labels2 = ax2.get_legend_handles_labels()
 	lines2_2, labels2_2 = ax2_1.get_legend_handles_labels()
@@ -156,9 +89,9 @@ def plot(ipath, opath, save):
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-i", "--input", help="Input data path", default="data/part4_2")
+	parser.add_argument("-i", "--input", help="Input data path", default="../data/part4_2")
 	parser.add_argument("-s", "--save", help="Save plot", action="store_true")
-	parser.add_argument("-o", "--output", help="Output data path", default=".")
+	parser.add_argument("-o", "--output", help="Output data path", default="../data")
 	args = parser.parse_args()
 
 	plot(args.input, args.output, args.save)
