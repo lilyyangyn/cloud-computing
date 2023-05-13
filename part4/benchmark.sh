@@ -53,10 +53,6 @@ kubectl delete service some-memcached-11211
 # 	-- "cd mmemcache-perf-dynamic
 # 		./mcperf -T 16 -A" &
 
-gcloud compute ssh --zone "europe-west3-a" "${AGENT_INTERNAL_NAME}"  --project "cca-eth-2023-group-49" \
-	-- "ps aux | grep memcached | awk '{print $2}' | sudo taskset -a -cp 0 '{print $1}'
-		cd /home/ubuntu
-		python3 cpu_util_measure.py" 
 
 for threads in 1 2; do
 	for cores in 1 2; do
@@ -65,6 +61,10 @@ for threads in 1 2; do
 			core_config="0,1"
 		fi
 
+		gcloud compute ssh --zone "europe-west3-a" "${AGENT_INTERNAL_NAME}"  --project "cca-eth-2023-group-49" \
+	-- "ps aux | grep memcached | awk '{print $2}' | sudo taskset -a -cp 0 '{print $1}'
+		cd /home/ubuntu
+		python3 cpu_util_measure.py" 
 	# 	gcloud compute ssh --zone "europe-west3-a" "${AGENT_INTERNAL_NAME}"  --project "cca-eth-2023-group-49" \
 	# -- "ps aux | grep memcached | awk '{print $2}' | sudo taskset -a -cp ${core_config} '{print $1}'
 	# 	cd /home/ubuntu
