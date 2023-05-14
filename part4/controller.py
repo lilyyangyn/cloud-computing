@@ -2,7 +2,7 @@ import argparse
 #import functools
 import subprocess
 from time import sleep
-from logger import * 
+from logger import *
 import time
 
 import psutil
@@ -74,7 +74,7 @@ def main():
     psutil.cpu_percent(None, True)
 
     logger = Logger("test.txt")
-    
+
     #logger.log_start()
     start = time.time()
 
@@ -90,6 +90,9 @@ def main():
     logger.log_jobs(SUBJECT[1], Event.START, "2,3")
     x = 1
     y = 0
+    ct = False
+    ct_mem = False
+    run_de = False
     changed = False
     changed_2 = False
     while True:
@@ -98,7 +101,7 @@ def main():
             break
 
         cpu_percentage = proc.cpu_percent()
-        
+
         # cpu_arr = psutil.cpu_percent(None, True)
         # tot_util_cpu = sum(cpu_arr)
 
@@ -108,21 +111,34 @@ def main():
                     sched.start_job(sched.special_job[0], "dedup")
                     logger.log_jobs("dedup", Event.START, "1")
                     logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
-                    
+
                     #sleep(0.1)
                     #sched.pause_job(sched.special_job[0], "dedup")
                 else:
                     sched.resume_job(sched.special_job[0], "dedup")
-                    logger.log_jobs("dedup", Event.UNPAUSE)
-                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
+                    if run_de == True:
+                        logger.log_jobs("dedup", Event.UNPAUSE)
+                        run_de = False
+                    if ct_mem == False:
+                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
+                        ct_mem = True
             else:
                 sched.pause_job(sched.special_job[0], "dedup")
-                logger.log_jobs("dedup", Event.PAUSE)
+                if run_de == False:
+                    logger.log_jobs("dedup", Event.PAUSE)
+                    run_de = True
                 if cpu_percentage < 100:
-                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
+                    if ct_mem == False:
+                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
+                        ct_mem = True
                 else:
-                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0,1")
+                    if ct_mem == True:
+                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0,1")
+                        ct_mem = False
         else:
+            if ct == False:
+                logger.log_jobs("dedup", Event.END)
+                ct = True
             if cpu_percentage < 100:
                 if changed == False:
                     sched.modify_cpu_usage(
@@ -130,8 +146,10 @@ def main():
                     changed = True
                     changed_2 = False
                     logger.log_jobs(SUBJECT[x], Event.UPDATE, "1,2,3")
+                if ct_mem == False:
                     logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
-            else: 
+                    ct_mem = True
+            else:
                 if changed_2 == False:
                     #if not check_ended()
                     sched.modify_cpu_usage(
@@ -139,11 +157,13 @@ def main():
                     changed_2 = True
                     changed = False
                     logger.log_jobs(SUBJECT[x], Event.UPDATE, "2,3")
+                if ct_mem == True:
                     logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0,1")
+                    ct_mem = False
  #sched.end_job(sched.special_job[0], "dedup")
         sleep(0.2)
         status = sched.end_job(sched.all_jobs[y], config[x][1])
-        
+
         if status == True:
             logger.log_jobs(SUBJECT[x], Event.END)
             x += 1
