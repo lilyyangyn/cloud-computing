@@ -63,6 +63,7 @@ class docker_scheduler:
             return True
         container.reload()
         if container.status == "exited":
+            
             return True
         else:
             return False
@@ -88,7 +89,7 @@ class docker_scheduler:
 
     def end_job(self, container, name):
         if container == None:
-            return
+            return True
         container.reload()
         if container.status == "exited":
 
@@ -97,25 +98,26 @@ class docker_scheduler:
             self.all_jobs.pop(0)
             print("job ended for ", name)
             return True
-        print("job not ended yet for", name)
+        # print("job not ended yet for", name)
         return False
 
     def modify_cpu_usage(self, container, numcpu, name):
 
-        print("status is", container.status, " for ", name)
+        # print("status is", container.status, " for ", name)
         container.reload()
 
         if container.status != "running" or container == None:
             return
-        print(numcpu)
-        print(container.status)
+        # print(numcpu)
+        # print(container.status)
+        print("updating ", name, " to use core ", numcpu)
         container.update(cpuset_cpus=numcpu)
 
     def pause_job(self, container, name):
         container.reload()
         if container.status in ["running", "restarting"]:
             container.pause()
-        print("paused" + name)
+            print("paused" + name)
 
     def check_isempty(self):
         if len(self.all_jobs) == 0:

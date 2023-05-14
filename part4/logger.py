@@ -1,5 +1,5 @@
 import time
-
+from enum import Enum
 START = "Start"
 END = "End"
 
@@ -14,6 +14,8 @@ class Object(Enum):
     RADIX = "Radix"
     VIPS = "Vips"
 
+
+
 class Event(Enum):
 	START = "Start"
 	PAUSE = "Pause"
@@ -22,7 +24,7 @@ class Event(Enum):
 
 class Logger:
 	def __init__(self, opath):
-		self.file = open(log_path, 'w', buffering=1)
+		self.file = open(opath, 'w', buffering=1)
 
 	def __log(self, object, info):
 		self.file.write(f'{time.time()}, {object}, {info}\n')
@@ -33,8 +35,12 @@ class Logger:
 	def log_end(self):
 		self.__log(Object.CONTROLLER, Event.END)
 
-	def log_container(self, container, evnet):
+	def log_container(self, container, event):
 		self.__log(container, event)
 
 	def log_memcached(self, ncpus):
 		self.__log(Object.MEMCACHED, ncpus)
+	
+	def close(self):
+		self.file.close()
+

@@ -43,7 +43,7 @@ gcloud compute scp --scp-flag=-r cpu_util_measure.py ubuntu@${MEMCACHED_SERVER_N
 gcloud compute scp --scp-flag=-r memcached_config.txt ubuntu@${MEMCACHED_SERVER_NAME}:/home/ubuntu/ --zone europe-west3-a
 
 
-gcloud compute ssh --zone "europe-west3-a" "${AGENT_INTERNAL_NAME}"  --project "cca-eth-2023-group-49" \
+gcloud compute ssh --zone "europe-west3-a" "${MEMCACHED_SERVER_NAME}"  --project "cca-eth-2023-group-49" \
 	-- "cd /home/ubuntu
 		sudo apt-get update
 		sudo apt install -y memcached libmemcached-tools
