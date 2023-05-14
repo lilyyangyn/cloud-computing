@@ -63,7 +63,7 @@ class docker_scheduler:
             return True
         container.reload()
         if container.status == "exited":
-            
+            print("job ended for ", name)
             return True
         else:
             return False

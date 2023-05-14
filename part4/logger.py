@@ -1,12 +1,13 @@
 import datetime
 from enum import Enum
 
-SUBJECT = ["blackscholes", 
+SUBJECT = [
+	"dedup",
+	"radix",
+	"blackscholes", 
 			"canneal", 
-			"dedup", 
+			"freqmine",
 			"ferret", 
-			"freqmine", 
-			"radix", 
 			"vips", 
 			"scheduler", 
 			"memcached"]

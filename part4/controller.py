@@ -3,6 +3,7 @@ import argparse
 import subprocess
 from time import sleep
 from logger import * 
+import time
 
 import psutil
 from scheduler import docker_scheduler
@@ -73,14 +74,20 @@ def main():
     psutil.cpu_percent(None, True)
 
     logger = Logger("test.txt")
-    logger.log_start()
+    
+    #logger.log_start()
     start = time.time()
 
     memcache_pid, c = add_memcached_profile()
     proc = psutil.Process(memcache_pid)
+    psc = proc.cpu_percent()
+    if psc >= 100:
+        logger.log_start("0,1")
+    else:
+        logger.log_start("0")
 
     sched.start_job(sched.all_jobs[0], config[1][1])
-    logger.log_container(config[1][1], Event.START)
+    logger.log_jobs(SUBJECT[1], Event.START, "2,3")
     x = 1
     y = 0
     changed = False
@@ -99,18 +106,22 @@ def main():
             if cpu_percentage < 50:
                 if not sched.check_started(sched.special_job[0], "dedup"):
                     sched.start_job(sched.special_job[0], "dedup")
-                    logger.log_container("dedup", Event.START)
-                    logger.log_memcached(cpu_percentage / 100)
+                    logger.log_jobs("dedup", Event.START, "1")
+                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
+                    
                     #sleep(0.1)
                     #sched.pause_job(sched.special_job[0], "dedup")
                 else:
                     sched.resume_job(sched.special_job[0], "dedup")
-                    logger.log_container("dedup", Event.UNPAUSE)
-                    logger.log_memcached(cpu_percentage / 100)
+                    logger.log_jobs("dedup", Event.UNPAUSE)
+                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
             else:
                 sched.pause_job(sched.special_job[0], "dedup")
-                logger.log_container("dedup", Event.PAUSE)
-                logger.log_memcached(cpu_percentage / 100)
+                logger.log_jobs("dedup", Event.PAUSE)
+                if cpu_percentage < 100:
+                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
+                else:
+                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0,1")
         else:
             if cpu_percentage < 100:
                 if changed == False:
@@ -118,7 +129,8 @@ def main():
                         sched.all_jobs[y], com3, config[x][1])
                     changed = True
                     changed_2 = False
-                    logger.log_memcached(cpu_percentage / 100)
+                    logger.log_jobs(SUBJECT[x], Event.UPDATE, "1,2,3")
+                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
             else: 
                 if changed_2 == False:
                     #if not check_ended()
@@ -126,20 +138,21 @@ def main():
                         sched.all_jobs[y], com2, config[x][1])
                     changed_2 = True
                     changed = False
-                    logger.log_memcached(cpu_percentage / 100)
+                    logger.log_jobs(SUBJECT[x], Event.UPDATE, "2,3")
+                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0,1")
  #sched.end_job(sched.special_job[0], "dedup")
         sleep(0.2)
         status = sched.end_job(sched.all_jobs[y], config[x][1])
         
         if status == True:
-            logger.log_container(config[x][1], Event.END)
+            logger.log_jobs(SUBJECT[x], Event.END)
             x += 1
             if sched.check_isempty() and sched.check_ended(sched.special_job[0], "dedup"):
                 break
             if not sched.check_isempty():
                 sched.start_job(sched.all_jobs[y], str(x))
             if x <= len(config) - 1:
-                logger.log_container(config[x][1], Event.START)
+                logger.log_jobs(SUBJECT[x], Event.START, "2,3")
 
     end = time.time()
 
