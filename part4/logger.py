@@ -34,9 +34,9 @@ class Logger:
 	def __log(self, event, subject, info=""):
 		cur_time = datetime.datetime.now().isoformat(timespec='microseconds')
 		if len(info) > 0:
-			self.file.write(f'{cur_time} {event} {subject} {info}\n')
+			self.file.write(f'{cur_time} {event.value} {subject} {info}\n')
 		else:
-			self.file.write(f'{cur_time} {event} {subject}\n')
+			self.file.write(f'{cur_time} {event.value} {subject}\n')
 
 	def log_start(self, active_cores):
 		self.__log(Event.START, SUBJECT[-2])
