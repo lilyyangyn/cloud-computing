@@ -82,12 +82,12 @@ def main():
     proc = psutil.Process(memcache_pid)
     psc = proc.cpu_percent()
     if psc >= 100:
-        logger.log_start("0,1")
+        logger.log_start("[0,1] 2")
     else:
-        logger.log_start("0")
+        logger.log_start("[0] 2")
 
     sched.start_job(sched.all_jobs[0], config[1][1])
-    logger.log_jobs(SUBJECT[1], Event.START, "2,3")
+    logger.log_jobs(SUBJECT[1], Event.START, "[2,3] 2")
     x = 1
     y = 0
     ct = False
@@ -109,8 +109,8 @@ def main():
             if cpu_percentage < 50:
                 if not sched.check_started(sched.special_job[0], "dedup"):
                     sched.start_job(sched.special_job[0], "dedup")
-                    logger.log_jobs("dedup", Event.START, "1")
-                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
+                    logger.log_jobs("dedup", Event.START, "[1] 1")
+                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0]")
 
                     #sleep(0.1)
                     #sched.pause_job(sched.special_job[0], "dedup")
@@ -120,7 +120,7 @@ def main():
                         logger.log_jobs("dedup", Event.UNPAUSE)
                         run_de = False
                     if ct_mem == False:
-                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
+                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0]")
                         ct_mem = True
             else:
                 sched.pause_job(sched.special_job[0], "dedup")
@@ -129,25 +129,25 @@ def main():
                     run_de = True
                 if cpu_percentage < 100:
                     if ct_mem == False:
-                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
+                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0]")
                         ct_mem = True
                 else:
                     if ct_mem == True:
-                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0,1")
+                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0,1]")
                         ct_mem = False
         else:
             if ct == False:
                 logger.log_jobs("dedup", Event.END)
                 ct = True
-            if cpu_percentage < 100:
+            if cpu_percentage < 70:
                 if changed == False:
                     sched.modify_cpu_usage(
                         sched.all_jobs[y], com3, config[x][1])
                     changed = True
                     changed_2 = False
-                    logger.log_jobs(SUBJECT[x], Event.UPDATE, "1,2,3")
+                    logger.log_jobs(SUBJECT[x], Event.UPDATE, "[1,2,3]")
                 if ct_mem == False:
-                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
+                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0]")
                     ct_mem = True
             else:
                 if changed_2 == False:
@@ -156,10 +156,16 @@ def main():
                         sched.all_jobs[y], com2, config[x][1])
                     changed_2 = True
                     changed = False
-                    logger.log_jobs(SUBJECT[x], Event.UPDATE, "2,3")
-                if ct_mem == True:
-                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0,1")
-                    ct_mem = False
+                    logger.log_jobs(SUBJECT[x], Event.UPDATE, "[2,3]")
+                if cpu_percentage < 100:
+                    if ct_mem == False:
+                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0]")
+                        ct_mem = True
+                else:
+                    if ct_mem == True:
+                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0,1]")
+                        ct_mem = False
+
  #sched.end_job(sched.special_job[0], "dedup")
         sleep(0.2)
         status = sched.end_job(sched.all_jobs[y], config[x][1])
@@ -172,7 +178,7 @@ def main():
             if not sched.check_isempty():
                 sched.start_job(sched.all_jobs[y], str(x))
             if x <= len(config) - 1:
-                logger.log_jobs(SUBJECT[x], Event.START, "2,3")
+                logger.log_jobs(SUBJECT[x], Event.START, "[2,3] 2")
 
     end = time.time()
 

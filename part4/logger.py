@@ -31,23 +31,23 @@ class Logger:
 	def __init__(self, opath):
 		self.file = open(opath, 'w', buffering=1)
 
-	def __log(self, event, subject, cores = "", threads = ""):
+	def __log(self, event, subject, info = ""):
 		cur_time = datetime.datetime.now().isoformat(timespec='microseconds')
 		if len(info) > 0:
-			self.file.write(f'{cur_time} {event.value} {subject} {info} 2\n')
+			self.file.write(f'{cur_time} {event.value} {subject} {info} \n')
 		else:
 			self.file.write(f'{cur_time} {event.value} {subject}\n')
 
 	def log_start(self, active_cores):
 		self.__log(Event.START, SUBJECT[-2])
-		self.__log(Event.START , SUBJECT[-1], active_cores, THREADS)
+		self.__log(Event.START , SUBJECT[-1], active_cores)
 
 	def log_end(self):
 		self.__log(Event.END, SUBJECT[-2])
 
 	def log_jobs(self, subject, event, active_cores=""):
 		if event == Event.START:
-			self.__log(event, subject, active_cores, THREADS)
+			self.__log(event, subject, active_cores)
 		else:
 			self.__log(event, subject, active_cores)
 
