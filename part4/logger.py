@@ -37,8 +37,7 @@ class Logger:
 		# 	self.file.write(f'{cur_time} {event.value} {subject} {info}\n')
 		# else:
 		# 	self.file.write(f'{cur_time} {event.value} {subject}\n')
-		core_data = '[{}]'.format(cores) if cores else ''
-		self.file.write(f'{cur_time} {event.value} {subject} {core_data} {threads}\n')
+		self.file.write(f'{cur_time} {event.value} {subject} {cores} {threads}\n')
 
 	def log_start(self, active_cores):
 		self.__log(Event.START, SUBJECT[-2])
@@ -61,8 +60,8 @@ class Logger:
 
 if __name__ == "__main__":
     logger = Logger("testlog.txt")
-    logger.log_start("0")
-    logger.log_jobs(SUBJECT[0], Event.START, "0")
-    logger.log_jobs(SUBJECT[0], Event.UPDATE, "0,1")
+    logger.log_start("[0]")
+    logger.log_jobs(SUBJECT[0], Event.START, "[0]")
+    logger.log_jobs(SUBJECT[0], Event.UPDATE, "[0,1]")
     logger.log_end()
     logger.close()
