@@ -41,7 +41,7 @@ gcloud compute ssh --zone "europe-west3-a" "${MEASURE_INTERNAL_NAME}"  --project
 
 gcloud compute scp --scp-flag=-r cpu_util_measure.py ubuntu@${MEMCACHED_SERVER_NAME}:/home/ubuntu/ --zone europe-west3-a
 gcloud compute scp --scp-flag=-r memcached_config.txt ubuntu@${MEMCACHED_SERVER_NAME}:/home/ubuntu/ --zone europe-west3-a
-
+gcloud compute scp --scp-flag=-r ../part4 ubuntu@${MEMCACHED_SERVER_NAME}:/home/ubuntu/ --zone europe-west3-a
 
 gcloud compute ssh --zone "europe-west3-a" "${MEMCACHED_SERVER_NAME}"  --project "cca-eth-2023-group-49" \
 	-- "cd /home/ubuntu
@@ -51,7 +51,9 @@ gcloud compute ssh --zone "europe-west3-a" "${MEMCACHED_SERVER_NAME}"  --project
 		sudo cat memcached_config.txt > /etc/memcached.conf
 		sudo systemctl restart memcached
 		sudo apt install python3-pip
-		pip3 install psutil" 
+		pip3 install psutil
+		pip3 install docker
+		pip3 install argparse" 
 
 # ---------------------------- Start Test On Client Agent ----------------------------
 
