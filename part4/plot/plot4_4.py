@@ -126,7 +126,8 @@ def plot(ipath, opath, run, save):
 		ax.set_ylabel('95th Percentile Latency (ms)')
 		ax.plot(start_times, latency_data, marker='o', markersize=4)
 		ax.tick_params(axis='y', labelcolor='tab:blue')
-		ax.set_yticks(np.arange(0, 1.1, 0.1))
+		ax.set_yticks(np.arange(0, 2.6, 0.2))
+		ax.axhline(y=1, linestyle="dotted", color="black")
 
 		ax1 = ax.twinx()
 		ax1.set_ylabel('QPS')
@@ -188,18 +189,16 @@ def plot(ipath, opath, run, save):
 	if not save:
 		plt.show()
 	else:
-		plt.savefig("{}/benchmarkpart4_3_{}.pdf".format(opath, run), bbox_inches='tight')
+		plt.savefig("{}/benchmarkpart4_4_{}.pdf".format(opath, run), bbox_inches='tight')
 		plt.clf()
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-i", "--input", help="Input data path", default="../data/part4_3")
+	parser.add_argument("-i", "--input", help="Input data path", default="../data/part4_4")
 	parser.add_argument("-s", "--save", help="Save plot", action="store_true")
 	parser.add_argument("-o", "--output", help="Output data path", default="../data")
 	args = parser.parse_args()
 
 	for run in range(RUNS):
 		plot(args.input, args.output, run, args.save)
-
-
 
