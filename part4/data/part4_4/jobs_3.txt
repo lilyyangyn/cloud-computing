@@ -81,7 +81,7 @@
 2023-05-17T12:29:31.035370 update_cores canneal [2,3]
 2023-05-17T12:29:31.035412 update_cores memcached [0,1]
 2023-05-17T12:29:31.512100 update_cores canneal [1,2,3]
-                                                                                                 2023-05-17T12:29:31.512174 update_cores memcached [0]
+2023-05-17T12:29:31.512174 update_cores memcached [0]
 2023-05-17T12:29:31.971256 update_cores canneal [2,3]
 2023-05-17T12:29:31.971330 update_cores memcached [0,1]
 2023-05-17T12:29:32.239558 update_cores canneal [1,2,3]

@@ -14,7 +14,7 @@ dedup = ("1",
          "dedup_",
          "anakli/cca:parsec_dedup",
          "./run -a run -S parsec -p dedup -i native -n 2")
-fft = ("2,3",
+radix = ("2,3",
        "radix_",
        "anakli/cca:splash2x_radix",
        "./run -a run -S splash2x -p radix -i native -n 2")
@@ -54,7 +54,8 @@ def add_memcached_profile():
             pid = proc.pid
             break
     #COPIED CODE, TO BE MODIFIED
-    cpu_affinity = ",".join(map(str, range(0, 2)))
+    # cpu_affinity = ",".join(map(str, range(0, 2)))
+    cpu_affinity = "0,1"
     # print(f'Setting Memcached CPU affinity to {cpu_affinity}')
     command = "sudo taskset -a -cp {cpu_affinity} {pid}"
     subprocess.run(command.split(" "), stdout=subprocess.DEVNULL,
@@ -62,18 +63,19 @@ def add_memcached_profile():
     #COPIED CODE, TO BE MODIFIED
     return pid, 4
 
+COOL_TIME = 0
 
 def main():
     q0 = 0
     q1 = 1
     q2 = 2
-    config = [dedup, fft, blackscholes, canneal, freqmine, ferret, vips]
-    #config = [dedup, fft]
+    config = [dedup, radix, blackscholes, canneal, freqmine, ferret, vips]
+    #config = [dedup, radix]
     sched = docker_scheduler(q0, q1, q2, config=config)
 
     psutil.cpu_percent(None, True)
 
-    logger = Logger("test.txt")
+    logger = Logger("jobs.txt")
 
     #logger.log_start()
     start = time.time()
@@ -81,10 +83,10 @@ def main():
     memcache_pid, c = add_memcached_profile()
     proc = psutil.Process(memcache_pid)
     psc = proc.cpu_percent()
-    if psc >= 100:
-        logger.log_start("[0,1] 2")
-    else:
-        logger.log_start("[0] 2")
+    # if psc >= 100:
+    logger.log_start("[0,1] 2")
+    # else:
+    #     logger.log_start("[0] 2")
 
     sched.start_job(sched.all_jobs[0], config[1][1])
     logger.log_jobs(SUBJECT[1], Event.START, "[2,3] 2")
@@ -92,9 +94,10 @@ def main():
     y = 0
     ct = False
     ct_mem = False
-    run_de = False
+    run_de = True
     changed = False
     changed_2 = False
+    last_scale_up = time.time()
     while True:
         res = sched.check_isempty()
         if res == True:
@@ -106,50 +109,57 @@ def main():
         # tot_util_cpu = sum(cpu_arr)
 
         if not sched.check_ended(sched.special_job[0], "dedup"):
+            now = time.time()
             if cpu_percentage < 50:
-                if not sched.check_started(sched.special_job[0], "dedup"):
-                    sched.start_job(sched.special_job[0], "dedup")
-                    logger.log_jobs("dedup", Event.START, "[1] 1")
-                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0]")
-
-                    #sleep(0.1)
-                    #sched.pause_job(sched.special_job[0], "dedup")
-                else:
-                    sched.resume_job(sched.special_job[0], "dedup")
-                    if run_de == True:
-                        logger.log_jobs("dedup", Event.UNPAUSE)
+                if now > last_scale_up + COOL_TIME:
+                    if not sched.check_started(sched.special_job[0], "dedup"):
+                        sched.start_job(sched.special_job[0], "dedup")
+                        logger.log_jobs("dedup", Event.START, "1")
                         run_de = False
-                    if ct_mem == False:
-                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0]")
-                        ct_mem = True
+                        # logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
+
+                        #sleep(0.1)
+                        #sched.pause_job(sched.special_job[0], "dedup")
+                    else:
+                        sched.resume_job(sched.special_job[0], "dedup")
+                        if run_de == True:
+                            logger.log_jobs("dedup", Event.UNPAUSE)
+                            run_de = False
+                        # if ct_mem == False:
+                        #     logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
+                        #     ct_mem = True
             else:
+                last_scale_up = now
                 sched.pause_job(sched.special_job[0], "dedup")
                 if run_de == False:
                     logger.log_jobs("dedup", Event.PAUSE)
                     run_de = True
-                if cpu_percentage < 100:
-                    if ct_mem == False:
-                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0]")
-                        ct_mem = True
-                else:
-                    if ct_mem == True:
-                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0,1]")
-                        ct_mem = False
+                # if cpu_percentage < 100:
+                #     if ct_mem == False:
+                #         logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0]")
+                #         ct_mem = True
+                # else:
+                    # if ct_mem == True:
+                    #     logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0,1]")
+                    #     ct_mem = False
         else:
             if ct == False:
                 logger.log_jobs("dedup", Event.END)
                 ct = True
+            now = time.time()
             if cpu_percentage < 70:
-                if changed == False:
-                    sched.modify_cpu_usage(
-                        sched.all_jobs[y], com3, config[x][1])
-                    changed = True
-                    changed_2 = False
-                    logger.log_jobs(SUBJECT[x], Event.UPDATE, "[1,2,3]")
-                if ct_mem == False:
-                    logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0]")
-                    ct_mem = True
+                if now > last_scale_up + COOL_TIME:
+                    if changed == False:
+                        sched.modify_cpu_usage(
+                            sched.all_jobs[y], com3, config[x][1])
+                        changed = True
+                        changed_2 = False
+                        logger.log_jobs(SUBJECT[x], Event.UPDATE, "1,2,3")
+                    # if ct_mem == False:
+                    #     logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
+                    #     ct_mem = True
             else:
+                last_scale_up = now
                 if changed_2 == False:
                     #if not check_ended()
                     sched.modify_cpu_usage(
@@ -157,14 +167,14 @@ def main():
                     changed_2 = True
                     changed = False
                     logger.log_jobs(SUBJECT[x], Event.UPDATE, "[2,3]")
-                if cpu_percentage < 100:
-                    if ct_mem == False:
-                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0]")
-                        ct_mem = True
-                else:
-                    if ct_mem == True:
-                        logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0,1]")
-                        ct_mem = False
+                # if cpu_percentage < 100:
+                #     if ct_mem == False:
+                #         logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0]")
+                #         ct_mem = True
+                # else:
+                #     if ct_mem == True:
+                #         logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0,1]")
+                #         ct_mem = False
 
  #sched.end_job(sched.special_job[0], "dedup")
         sleep(0.2)
