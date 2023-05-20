@@ -51,3 +51,9 @@ logfile /var/log/memcached.log
 
 # Use a pidfile
 -P /var/run/memcached/memcached.pid
+
+./mcperf -s 10.0.16.5 --loadonly
+./mcperf -s 10.0.16.5 -a 10.0.16.2 \
+--noload -T 16 -C 4 -D 4 -Q 1000 -c 4 -t 1200 \
+--qps_interval 3 --qps_min 5000 --qps_max 100000 \
+--qps_seed 3274

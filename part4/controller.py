@@ -11,34 +11,40 @@ from scheduler import docker_scheduler
 #import sys
 
 dedup = ("1",
-         "dedup_",
+         "dedup",
          "anakli/cca:parsec_dedup",
-         "./run -a run -S parsec -p dedup -i native -n 2")
-radix = ("2,3",
-       "radix_",
-       "anakli/cca:splash2x_radix",
-       "./run -a run -S splash2x -p radix -i native -n 2")
-blackscholes = ("2,3",
-                "blackscholes_",
-                "anakli/cca:parsec_blackscholes",
-                "./run -a run -S parsec -p blackscholes -i native -n 2")
-canneal = ("2,3",
-           "canneal_",
-           "anakli/cca:parsec_canneal",
-           "./run -a run -S parsec -p canneal -i native -n 2")
-freqmine = ("2,3",
-            "freqmine_",
-            "anakli/cca:parsec_freqmine",
-            "./run -a run -S parsec -p freqmine -i native -n 2")
-ferret = ("2,3",
-          "ferret_",
-          "anakli/cca:parsec_ferret",
-          "./run -a run -S parsec -p ferret -i native -n 2")
-
+         "./run -a run -S parsec -p dedup -i native -n 2",
+         2)
 vips = ("2,3",
-        "vips_",
+        "vips",
         "anakli/cca:parsec_vips",
-        "./run -a run -S parsec -p vips -i native -n 2")
+        "./run -a run -S parsec -p vips -i native -n 2", 
+        2)
+blackscholes = ("2,3",
+                "blackscholes",
+                "anakli/cca:parsec_blackscholes",
+                "./run -a run -S parsec -p blackscholes -i native -n 4", 
+                4)
+canneal = ("2,3",
+           "canneal",
+           "anakli/cca:parsec_canneal",
+           "./run -a run -S parsec -p canneal -i native -n 4", 
+           4)
+radix = ("2,3",
+       "radix",
+       "anakli/cca:splash2x_radix",
+       "./run -a run -S splash2x -p radix -i native -n 8",  # radix can only run with 2^x threads
+       8)
+freqmine = ("2,3",
+            "freqmine",
+            "anakli/cca:parsec_freqmine",
+            "./run -a run -S parsec -p freqmine -i native -n 8", 
+            8)
+ferret = ("2,3",
+          "ferret",
+          "anakli/cca:parsec_ferret",
+          "./run -a run -S parsec -p ferret -i native -n 8",
+          8)
 
 
 com3 = '1,2,3'
@@ -63,13 +69,14 @@ def add_memcached_profile():
     #COPIED CODE, TO BE MODIFIED
     return pid, 4
 
+# COOL_TIME = 1
 COOL_TIME = 0
 
 def main():
     q0 = 0
     q1 = 1
     q2 = 2
-    config = [dedup, radix, blackscholes, canneal, freqmine, ferret, vips]
+    config = [dedup, vips, radix, blackscholes, canneal, freqmine, ferret]
     #config = [dedup, radix]
     sched = docker_scheduler(q0, q1, q2, config=config)
 
@@ -89,7 +96,7 @@ def main():
     #     logger.log_start("[0] 2")
 
     sched.start_job(sched.all_jobs[0], config[1][1])
-    logger.log_jobs(SUBJECT[1], Event.START, "[2,3] 2")
+    logger.log_jobs(config[1][1], Event.START, f'[2,3] {config[1][-1]}')
     x = 1
     y = 0
     ct = False
@@ -114,7 +121,7 @@ def main():
                 if now > last_scale_up + COOL_TIME:
                     if not sched.check_started(sched.special_job[0], "dedup"):
                         sched.start_job(sched.special_job[0], "dedup")
-                        logger.log_jobs("dedup", Event.START, "1")
+                        logger.log_jobs("dedup", Event.START, f'[1] {config[0][-1]}')
                         run_de = False
                         # logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
 
@@ -147,14 +154,14 @@ def main():
                 logger.log_jobs("dedup", Event.END)
                 ct = True
             now = time.time()
-            if cpu_percentage < 70:
+            if cpu_percentage < 50:
                 if now > last_scale_up + COOL_TIME:
                     if changed == False:
                         sched.modify_cpu_usage(
                             sched.all_jobs[y], com3, config[x][1])
                         changed = True
                         changed_2 = False
-                        logger.log_jobs(SUBJECT[x], Event.UPDATE, "1,2,3")
+                        logger.log_jobs(config[x][1], Event.UPDATE, "1,2,3")
                     # if ct_mem == False:
                     #     logger.log_jobs(SUBJECT[-1], Event.UPDATE, "0")
                     #     ct_mem = True
@@ -166,7 +173,7 @@ def main():
                         sched.all_jobs[y], com2, config[x][1])
                     changed_2 = True
                     changed = False
-                    logger.log_jobs(SUBJECT[x], Event.UPDATE, "[2,3]")
+                    logger.log_jobs(config[x][1], Event.UPDATE, "[2,3]")
                 # if cpu_percentage < 100:
                 #     if ct_mem == False:
                 #         logger.log_jobs(SUBJECT[-1], Event.UPDATE, "[0]")
@@ -177,18 +184,18 @@ def main():
                 #         ct_mem = False
 
  #sched.end_job(sched.special_job[0], "dedup")
-        sleep(0.2)
+        sleep(0.4)
         status = sched.end_job(sched.all_jobs[y], config[x][1])
 
         if status == True:
-            logger.log_jobs(SUBJECT[x], Event.END)
+            logger.log_jobs(config[x][1], Event.END)
             x += 1
             if sched.check_isempty() and sched.check_ended(sched.special_job[0], "dedup"):
                 break
             if not sched.check_isempty():
                 sched.start_job(sched.all_jobs[y], str(x))
             if x <= len(config) - 1:
-                logger.log_jobs(SUBJECT[x], Event.START, "[2,3] 2")
+                logger.log_jobs(config[x][1], Event.START, f'[2,3]  {config[1][-1]}')
 
     end = time.time()
 

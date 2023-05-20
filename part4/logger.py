@@ -1,14 +1,16 @@
 import datetime
 from enum import Enum
+import time
+import pytz
 
 SUBJECT = [
 	"dedup",
-	"radix",
+	"vips",
 	"blackscholes", 
 	"canneal", 
+	"radix",
 	"freqmine",
-	"ferret", 
-	"vips", 
+	"ferret",  
 	"scheduler", 
 	"memcached"]
 
@@ -23,6 +25,9 @@ class Event(Enum):
 	UNPAUSE = "unpause"
 	CUSTOME = "custom"
 
+zurich_tz = pytz.timezone('Europe/Zurich')
+# timezone_diff = datetime.timedelta(hours=2)
+
 # RULES: 
 # - each jobs should start and end, except for memcached who should only start
 # - additional cpu usage (a list of CPU cores) should be logged for START and UPDATE events except for scheduler
@@ -32,11 +37,9 @@ class Logger:
 		self.file = open(opath, 'w', buffering=1)
 
 	def __log(self, event, subject, info = ""):
-		cur_time = datetime.datetime.now().isoformat(timespec='microseconds')
-		if len(info) > 0:
-			self.file.write(f'{cur_time} {event.value} {subject} {info} \n')
-		else:
-			self.file.write(f'{cur_time} {event.value} {subject}\n')
+		cur_time = datetime.datetime.now().astimezone(zurich_tz).isoformat(timespec='microseconds')[:-6]
+		# cur_time = (datetime.datetime.now() + timezone_diff).isoformat(timespec='microseconds')
+		self.file.write(f'{cur_time} {event.value} {subject} {info} \n')
 
 	def log_start(self, active_cores):
 		self.__log(Event.START, SUBJECT[-2])

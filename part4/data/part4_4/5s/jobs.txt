@@ -1,0 +1,107 @@
+2023-05-20T00:16:33.732139 start scheduler
+2023-05-20T00:16:33.732242 start memcached [0,1] 2
+2023-05-20T00:16:33.972211 start vips [2,3] 2
+2023-05-20T00:16:34.259491 start dedup [1] 2
+2023-05-20T00:16:34.698277 pause dedup
+2023-05-20T00:16:51.024492 unpause dedup
+2023-05-20T00:16:54.726438 pause dedup
+2023-05-20T00:17:00.047927 unpause dedup
+2023-05-20T00:17:05.589889 pause dedup
+2023-05-20T00:17:11.012952 unpause dedup
+2023-05-20T00:17:20.777735 pause dedup
+2023-05-20T00:17:33.194862 end vips
+2023-05-20T00:17:33.530175 start blackscholes [2,3]  2
+2023-05-20T00:17:34.778418 unpause dedup
+2023-05-20T00:17:49.479452 pause dedup
+2023-05-20T00:17:56.070654 unpause dedup
+2023-05-20T00:17:59.503685 end dedup
+2023-05-20T00:17:59.506147 update_cores blackscholes 1,2,3
+2023-05-20T00:17:59.920130 end blackscholes
+2023-05-20T00:18:00.192209 start canneal [2,3]  2
+2023-05-20T00:18:00.655701 update_cores canneal [2,3]
+2023-05-20T00:18:20.187834 update_cores canneal 1,2,3
+2023-05-20T00:18:30.347605 update_cores canneal [2,3]
+2023-05-20T00:18:34.851411 update_cores canneal 1,2,3
+2023-05-20T00:18:44.680084 update_cores canneal [2,3]
+2023-05-20T00:19:07.051131 end canneal
+2023-05-20T00:19:07.354491 start freqmine [2,3]  2
+2023-05-20T00:19:32.163499 update_cores freqmine 1,2,3
+2023-05-20T00:19:32.611667 update_cores freqmine [2,3]
+2023-05-20T00:19:33.063617 update_cores freqmine 1,2,3
+2023-05-20T00:19:33.527636 update_cores freqmine [2,3]
+2023-05-20T00:19:44.927402 update_cores freqmine 1,2,3
+2023-05-20T00:19:49.840812 update_cores freqmine [2,3]
+2023-05-20T00:20:09.807718 update_cores freqmine 1,2,3
+2023-05-20T00:20:14.793564 update_cores freqmine [2,3]
+2023-05-20T00:20:44.863639 update_cores freqmine 1,2,3
+2023-05-20T00:20:49.775853 update_cores freqmine [2,3]
+2023-05-20T00:20:54.691815 update_cores freqmine 1,2,3
+2023-05-20T00:21:09.752817 update_cores freqmine [2,3]
+2023-05-20T00:21:50.351853 update_cores freqmine 1,2,3
+2023-05-20T00:21:52.435215 update_cores freqmine [2,3]
+2023-05-20T00:21:53.700707 update_cores freqmine 1,2,3
+2023-05-20T00:21:54.151901 update_cores freqmine [2,3]
+2023-05-20T00:21:59.033780 end freqmine
+2023-05-20T00:21:59.305872 start ferret [2,3]  2
+2023-05-20T00:22:04.623148 update_cores ferret 1,2,3
+2023-05-20T00:22:09.587402 update_cores ferret [2,3]
+2023-05-20T00:22:29.911592 update_cores ferret 1,2,3
+2023-05-20T00:22:35.699936 update_cores ferret [2,3]
+2023-05-20T00:23:00.080276 update_cores ferret 1,2,3
+2023-05-20T00:23:04.622851 update_cores ferret [2,3]
+2023-05-20T00:23:10.755458 update_cores ferret 1,2,3
+2023-05-20T00:23:14.867235 update_cores ferret [2,3]
+2023-05-20T00:23:25.048134 update_cores ferret 1,2,3
+2023-05-20T00:23:30.002640 update_cores ferret [2,3]
+2023-05-20T00:23:34.914813 update_cores ferret 1,2,3
+2023-05-20T00:23:39.850859 update_cores ferret [2,3]
+2023-05-20T00:23:50.027888 update_cores ferret 1,2,3
+2023-05-20T00:23:59.804902 update_cores ferret [2,3]
+2023-05-20T00:24:10.004186 update_cores ferret 1,2,3
+2023-05-20T00:24:14.933290 update_cores ferret [2,3]
+2023-05-20T00:24:29.968311 update_cores ferret 1,2,3
+2023-05-20T00:24:39.736283 update_cores ferret [2,3]
+2023-05-20T00:24:45.063640 update_cores ferret 1,2,3
+2023-05-20T00:24:54.829674 update_cores ferret [2,3]
+2023-05-20T00:25:11.106945 update_cores ferret 1,2,3
+2023-05-20T00:25:14.808283 update_cores ferret [2,3]
+2023-05-20T00:25:19.719090 update_cores ferret 1,2,3
+2023-05-20T00:25:29.973036 update_cores ferret [2,3]
+2023-05-20T00:25:34.882504 update_cores ferret 1,2,3
+2023-05-20T00:25:39.815860 update_cores ferret [2,3]
+2023-05-20T00:25:54.874686 update_cores ferret 1,2,3
+2023-05-20T00:25:59.823258 update_cores ferret [2,3]
+2023-05-20T00:26:10.007446 update_cores ferret 1,2,3
+2023-05-20T00:26:14.952347 update_cores ferret [2,3]
+2023-05-20T00:26:24.727440 update_cores ferret 1,2,3
+2023-05-20T00:26:29.679930 update_cores ferret [2,3]
+2023-05-20T00:26:34.995532 update_cores ferret 1,2,3
+2023-05-20T00:26:39.908349 update_cores ferret [2,3]
+2023-05-20T00:27:10.367881 update_cores ferret 1,2,3
+2023-05-20T00:27:14.915933 update_cores ferret [2,3]
+2023-05-20T00:27:19.822881 update_cores ferret 1,2,3
+2023-05-20T00:27:24.747609 update_cores ferret [2,3]
+2023-05-20T00:27:30.063313 update_cores ferret 1,2,3
+2023-05-20T00:27:34.623410 update_cores ferret [2,3]
+2023-05-20T00:27:39.928339 end ferret
+2023-05-20T00:27:40.174053 start radix [2,3]  2
+2023-05-20T00:27:40.227496 update_cores radix 1,2,3
+2023-05-20T00:27:44.775745 update_cores radix [2,3]
+2023-05-20T00:27:49.704184 update_cores radix 1,2,3
+2023-05-20T00:27:59.882951 update_cores radix [2,3]
+2023-05-20T00:28:09.659818 update_cores radix 1,2,3
+2023-05-20T00:28:19.859191 update_cores radix [2,3]
+2023-05-20T00:28:24.767549 update_cores radix 1,2,3
+2023-05-20T00:28:30.491184 update_cores radix [2,3]
+2023-05-20T00:29:00.108221 update_cores radix 1,2,3
+2023-05-20T00:29:04.651128 update_cores radix [2,3]
+2023-05-20T00:29:14.835973 update_cores radix 1,2,3
+2023-05-20T00:29:29.884349 update_cores radix [2,3]
+2023-05-20T00:29:34.800063 update_cores radix 1,2,3
+2023-05-20T00:29:49.843935 update_cores radix [2,3]
+2023-05-20T00:30:15.015395 update_cores radix 1,2,3
+2023-05-20T00:30:19.931824 update_cores radix [2,3]
+2023-05-20T00:30:29.707580 update_cores radix 1,2,3
+2023-05-20T00:30:35.034910 update_cores radix [2,3]
+2023-05-20T00:30:54.955169 end radix
+2023-05-20T00:30:54.957398 end scheduler

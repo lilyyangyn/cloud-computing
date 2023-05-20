@@ -4,8 +4,9 @@ import numpy as np
 import argparse
 from enum import Enum
 from datetime import datetime
+import datetime as dt
 
-RUNS = 3
+RUNS = 2
 
 PART = "4_3"
 
@@ -27,7 +28,6 @@ class Event(Enum):
 
 COLORS = ["#CCA000", "#CCCCAA", "#CCACCA", "#AACCCA", "#0CCA00", "#00CCA0", "#CC0A00"]
 
-
 def read_file_logs(p, filename):
 	logs = {}
 	with open(p + "/" + filename, 'r') as f:
@@ -47,7 +47,7 @@ def read_file_logs(p, filename):
 			logs[data[2]].append(value)
 	return logs
 
-def read_file_latency(p, filename, controllerEnd):
+def read_file_latency(p, filename, start, end):
 	raw_data = []
 	real_qps = []
 	start_times = []
@@ -68,7 +68,6 @@ def read_file_latency(p, filename, controllerEnd):
 			if "Timestamp end" in line:
 				end_time = float(line.split()[-1])/1000
 				interval = (end_time - start_time) / interval_num
-				start_time = 0
 				continue
 
 			data = line.split()
@@ -79,12 +78,14 @@ def read_file_latency(p, filename, controllerEnd):
 				header = False
 				continue
 
-			raw_data.append(float(data[12]))	# p95
-			real_qps.append(float(data[16]))	# real qps
-			start_times.append(start_time)	# start time
+			if start_time > start:
+				raw_data.append(float(data[12]))	# p95
+				real_qps.append(float(data[16]))	# real qps
+				start_times.append(start_time-start)	# start time
+				start_time += interval
+				if start_time > end:
+					break
 			start_time += interval
-			if start_time > controllerEnd:
-				break
 
 	return raw_data, real_qps, start_times
 
@@ -115,7 +116,7 @@ def plot(ipath, opath, run, save):
 
 	qps_data = []
 	latency_data = []
-	raw_latency, raw_qps, start_times = read_file_latency(ipath, f'mcperf_{run}.txt', endTime-startTime)
+	raw_latency, raw_qps, start_times = read_file_latency(ipath, f'mcperf_{run}.txt', startTime, endTime)
 	qps_data = np.array(raw_qps) / 1000
 	latency_data = np.array(raw_latency) / 1000
 
@@ -146,6 +147,8 @@ def plot(ipath, opath, run, save):
 
 	def plotB(ax):
 		ax.set_ylabel('CPU core for Memcached')
+		memcached_timestamps.append(endTime-startTime)
+		memcached_cpus.append(memcached_cpus[-1])
 		ax.plot(memcached_timestamps, memcached_cpus, markersize=4)
 		ax.tick_params(axis='y', labelcolor='tab:blue')
 		ax.set_yticks(np.arange(0, 5, 1))
